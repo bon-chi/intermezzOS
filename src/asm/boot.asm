@@ -1,4 +1,5 @@
 global start
+extern kmain
 
 section .text
 bits 32
@@ -6,7 +7,7 @@ start:
     ; Point the first entry of the level 4 page table to the first entry in the
     ; p3 table
     mov eax, p3_table
-    or eax, 0b11 ; 
+    or eax, 0b11 ;
     mov dword [p4_table + 0], eax
 
     ; Point the first entry of the level 3 page table to the first entry in the
@@ -58,7 +59,7 @@ start:
     mov es, ax
 
     ; jump to long mode!
-    jmp gdt64.code:long_mode_start
+    jmp gdt64.code:kmain
 
     hlt
 
@@ -83,13 +84,3 @@ gdt64:
 .pointer:
     dw .pointer - gdt64 - 1
     dq gdt64
-
-section .text
-bits 64
-long_mode_start:
-
-    mov rax, 0x2f592f412f4b2f4f
-    mov qword [0xb8000], rax
-
-    hlt
-
